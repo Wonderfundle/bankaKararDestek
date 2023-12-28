@@ -1,0 +1,247 @@
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Bigabank - Giriş</title>
+  <link href="css/styles.css" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <script>
+    $(document).ready(function () {
+      // Session kontrolü
+      $.ajax({
+        url: "http://localhost:3000/api/session-check", // Session kontrol endpoint'i
+        type: 'GET',
+        success: function (response) {
+          if (!response.isLoggedIn) {
+            window.location.href = "login.html";
+          }
+        },
+        error: function (error) {
+          console.error(error);
+          alert("Hata");
+        }
+      });
+    });
+  </script>
+
+</head>
+
+<body class="sb-nav-fixed">
+  <nav class="sb-topnav navbar navbar-expand navbar-dark bg-success">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="index.html">GİGABANK</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
+      <i class="fas fa-bars"></i>
+    </button>
+    <!-- Navbar Search-->
+    <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></div>
+    <!-- Navbar-->
+
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <!--  <li><a class="dropdown-item" href="#!">Settings</a></li>-->
+          <!-- <li><a class="dropdown-item" href="#!">Activity Log</a></li>-->
+          <li class="dropdown-header">
+            <a class="dropdown-item">Merhaba</a>
+          </li>
+          <li><a class="dropdown-item" href="cikisYap.php">Çıkış Yap</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+      <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+          <div class="nav">
+            <a class="nav-link" href="index.php">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-tachometer-alt" style="color:blue"></i>
+              </div>
+              Gösterge Paneli
+            </a>
+            <a class="nav-link" href="stokHareketleriListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-dolly"></i>
+              </div>
+              Stok Hareketleri
+            </a>
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+              aria-expanded="false" aria-controls="collapsePages">
+              <div class="sb-nav-link-icon"><i class="fas fa-warehouse"></i></div>
+              Depo Listele
+              <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+              <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                <a class="nav-link" href="depo1.php">
+                  <div class="sb-nav-link-icon"><i class="fa fa-align-left"></i></div>
+                  Depo 1
+                </a>
+                <a class="nav-link" href="depo2.php">
+                  <div class="sb-nav-link-icon"><i class="fa fa-align-left"></i></div>
+                  Depo 2
+                </a>
+                <a class="nav-link" href="depo3.php">
+                  <div class="sb-nav-link-icon"><i class="fa fa-align-left"></i></div>
+                  Depo 3
+                </a>
+
+              </nav>
+            </div>
+            <div class="sb-sidenav-menu-heading">Düzenleme İşlemleri</div>
+            <a class="nav-link" href="urunDuzenleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-pen"></i>
+              </div>
+              Ürün Düzenle
+            </a>
+            <a class="nav-link" href="tedarikciDuzenleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-boxes-packing"></i>
+              </div>
+              Tedarikçi Düzenle
+            </a>
+            <a class="nav-link" href="kategoriDuzenleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-layer-group"></i>
+              </div>
+              Kategori Düzenle
+            </a>
+            <a class="nav-link" href="yoneticiDuzenleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-user-tie"></i>
+              </div>
+              Yönetici Düzenle
+            </a>
+            <a class="nav-link" href="depoDuzenleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-warehouse"></i>
+              </div>
+              Depo Düzenle
+            </a>
+            <a class="nav-link" href="stokDuzenleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-box-open"></i>
+              </div>
+              Stok Düzenle
+            </a>
+            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+            </div>
+            <div class="sb-sidenav-menu-heading">Tablolar</div>
+            <a class="nav-link" href="urunListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-align-left"></i>
+              </div>
+              Ürün Listele
+            </a>
+            <a class="nav-link" href="tedarikciListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-truck-field"></i>
+              </div>
+              Tedarikçi Listele
+            </a>
+            <a class="nav-link" href="depoListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-warehouse"></i>
+              </div>
+              Depo Listele
+            </a>
+            <a class="nav-link" href="yoneticiListele.php">
+              <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
+              Yönetici Listele
+            </a>
+            <a class="nav-link" href="kategoriListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-layer-group"></i>
+              </div>
+              Kategori Listele
+            </a>
+            <a class="nav-link" href="stokListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-boxes-stacked"></i>
+              </div>
+              Stok Listele
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="container-fluid px-4">
+          <h1 class="mt-4">Gösterge Paneli</h1>
+          <div class="row">
+            <div class="col-xl-5 mb-4">
+              <div class="card">
+                <div class="card-header">
+                  <i class="fas fa-chart-area me-1"></i>
+                  Kategorilerdeki Toplam Ürün Sayısı
+                </div>
+                <canvas id="myChart"></canvas>
+              </div>
+            </div>
+            <div class="col-xl-1 mb-4"></div>
+            <div class="col-xl-4 mb-4">
+              <div class="card">
+                <div class="card-header">
+                  <i class="fas fa-chart-area me-1"></i>
+                  Depolardaki Toplam Ürün Miktarı
+                </div>
+                <canvas id="myChart2"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </main>
+  </div>
+  </div>
+  <script>
+    $(document).ready(function(){
+      $("#cikis_yap").click(function(){
+        $.ajax({
+          // Çıkış işlemi için yeni bir endpoint belirleyin
+          url: "http://localhost:3000/api/logout",
+          type: 'POST',
+          contentType: 'application/json',
+          success: function(response){
+            console.log(response);
+            alert("Çıkış yapıldı");
+            // Çıkış yapıldıktan sonra index.html sayfasına yönlendirin
+            window.location.href = "login.html";
+          },
+          error: function(error){
+            console.error(error);
+            alert("Hata");
+          }
+        });
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+  <script src="js/scripts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+  <script src="assets/demo/chart-area-demo.js"></script>
+  <script src="assets/demo/chart-bar-demo.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+    crossorigin="anonymous"></script>
+  <script src="js/datatables-simple-demo.js"></script>
+</body>
+
+</html>

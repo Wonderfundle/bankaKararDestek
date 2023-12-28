@@ -27,7 +27,28 @@ const login = async (req, res) => {
   });
 };
 
-module.exports = { login };
+const musteriler = async (req, res) => {
+    try {
+      const result = await dbConn.promise().query("SELECT id, adSoyad, tarih, gelir, para, krediSkoru, varlikSayisi FROM musteriler");
+      
+      if (result[0].length > 0) {
+        return new Response(result[0]).basarili_giris(res);
+      } else {
+        return res.status(203).json({
+          success: false,
+          message: "Müşteri bulunamadı"
+        });
+      }
+    } catch (error) {
+      console.error("Müşteri verilerini çekerken bir hata oluştu:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Müşteri verileri çekilemedi"
+      });
+    }
+  };
+
+module.exports = { login,musteriler };
 
 /* const yoneticiEkle=async(req,res)=>{
    const kullanici_adi=req.body.kullanici_adi

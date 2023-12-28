@@ -55,30 +55,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function(){
-            $("#giris_yap").click(function(){
-                //obje json formatında
-                const girisKontrol={
-                    k_adi:$("#k_adi").val(),
-                    sifre:$("#sifre").val(),
-                }
-                $.ajax({
-                    //API Endpoint
-                    url:"http://localhost:3000/api/login",
-                    type:'POST',
-                    contentType:'application/json',
-                    data:JSON.stringify(girisKontrol),
-                    success:function(response){
-                        console.log(response)
-                        alert("Giriş Yapıldı")
-                        window.location.href = "index.html"
-                    },
-                    error:function(error){
-                        console.error(error)
-                        alert("Hata")
-                    }
-                })
-            })
-        })
+    $("#giris_yap").click(function(){
+      // obje json formatında
+      const girisKontrol = {
+        k_adi: $("#k_adi").val(),
+        sifre: $("#sifre").val(),
+      };
+
+      $.ajax({
+        // API Endpoint
+        url: "http://localhost:3000/api/login",
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(girisKontrol),
+        success: function(response) {
+          console.log(response);
+          if (response.success) {
+            // Sadece başarılıysa yönlendirme yap
+            alert("Giriş Yapıldı");
+            window.location.href = "index.html";
+          } else {
+            // Başarısızsa uyarı ver
+            alert("Hata");
+          }
+        },
+        error: function(error) {
+          console.error(error);
+          alert("Hata");
+        }
+      });
+    });
+  });
     </script>
 </body>
 </html>

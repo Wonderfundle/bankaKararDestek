@@ -31,6 +31,9 @@ app.use(session({
       }
     });
   });
+  app.get('/musteriler', (req, res) => {
+    res.json(musteriler);
+});
   
 app.use(cors());
 app.use(express.json())

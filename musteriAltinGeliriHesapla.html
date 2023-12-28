@@ -172,7 +172,7 @@
               <section class="content">
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Müşteri Faiz Oranı Hesapla</h3>
+                    <h3 class="card-title">Müşteri Altın Geliri Hesapla</h3>
                   </div>
     
                   <div class="card-body">
@@ -183,8 +183,7 @@
                           <div class="col-sm-10">
                             <select class="form-control" id="musteriSec" required>
                                 <option value="" disabled selected>Müşteri Seçin</option>
-                            </select>
-                          </div>
+                                                            </select>
                         </div>
                       </div>
                     </div>
@@ -197,28 +196,13 @@
                           </div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col">
-                          <div class="form-group row">
-                            <label>Faiz Oranı</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="faizOrani">
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="25">25</option>
-                                    <option value="30">30</option>
-                                    <option value="35">35</option>
-                                    <option value="40">40</option>
-                                </select>
-                            </div>
-                          </div>
-                        </div>
+                      
                         <div class="row">
                         <div class="col">
                             <div class="form-group row">
-                                <label>Faiz Süresi</label>
+                                <label>Vade Süresi</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" id="faizSuresi">
+                                    <select class="form-control" id="vadeSuresi">
                                         <option value="6">6 Ay</option>
                                         <option value="12">1 Yıl</option>
                                         <option value="24">2 Yıl</option>
@@ -227,10 +211,12 @@
                             </div>
                         </div>
                   </div>
-                  <button type="button" id="calculateBtn" class="btn btn-primary mx-auto col-3 my-1">
-                    Faiz Hesapla
+                  <button type="button" onclick="altinAlSimulasyonunuGoster()" class="btn btn-primary mx-auto col-3 my-1">
+                    Altın Geliri Hesapla
                   </button>
-                  <canvas id="myChart" width="400" height="200"></canvas>
+                 
+  <canvas id="altinChart" width="400" height="200"></canvas>
+
                 </main>
     </div>
     </div>
@@ -248,64 +234,8 @@
     })
     .catch(error => console.error(error));
     </script>
-<script>
-    let myChart; 
-
-    document.getElementById('calculateBtn').addEventListener('click', function () {
-        if (myChart) {
-            myChart.destroy();
-        }
-
-        const faizOraniYillik = parseFloat(document.getElementById('faizOrani').value);
-        const faizSuresiYil = parseFloat(document.getElementById('faizSuresi').value);
-        const para = parseFloat(document.getElementById('para').value);
-
-        const faizOraniAylık = faizOraniYillik / 12;
-        const faizSuresiAylar = faizSuresiYil;
-
-        const toplamFaizTutari = [];
-        const labels = [];
-        let toplamPara = para;
-
-        for (let i = 1; i <= faizSuresiAylar; i++) {
-            labels.push(`Ay ${i}`);
-            const aylıkFaizTutarı = toplamPara * (faizOraniAylık / 100); // Hata burada düzeltildi
-            toplamPara += aylıkFaizTutarı;
-            toplamFaizTutari.push(parseFloat(toplamPara.toFixed(1)));
-        }
-
-        // Sadece girilen faiz süresi kadar olan verileri al
-        const trimmedLabels = labels.slice(0, faizSuresiAylar);
-        const trimmedToplamFaizTutari = toplamFaizTutari.slice(0, faizSuresiAylar);
-
-        const ctx = document.getElementById('myChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: trimmedLabels,
-                datasets: [{
-                    label: 'Faiz Geliri',
-                    data: trimmedToplamFaizTutari,
-                    backgroundColor: ['rgba(75, 192, 192, 0.2)'],
-                    borderColor: ['rgba(75, 192, 192, 1)'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    });
-</script>
-
-
-   <script>
-    document.getElementById('musteriSec').addEventListener('change', function() {
+    <script>
+        document.getElementById('musteriSec').addEventListener('change', function() {
       const selectedCustomerId = this.value; // Seçilen müşterinin ID'sini al
   
       // Seçilen müşterinin bilgilerini almak için yeni bir API çağrısı yap
@@ -318,8 +248,101 @@
         })
         .catch(error => console.error(error));
     });
-  </script>
-  
+    </script>
+    <script>
+        async function getAltinFiyatlari() {
+  try {
+    const response = await fetch('http://localhost:3000/api/altin-fiyatlari');
+    const result = await response.json();
+
+    if (result.success) {
+      return result.altinFiyati;
+    } else {
+      console.error(result.message);
+      return null;
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+    </script>
+<script>
+    // Grafik oluşturma fonksiyonu
+    let myChart;
+
+    async function altinAlSimulasyonunuGoster() {
+        const vadeSuresi = document.getElementById('vadeSuresi').value;
+        const baslangicPara = parseFloat(document.getElementById('para').value);
+
+        // Tüm altın fiyatlarını almak için API çağrısı yap
+        const allAltinFiyatlari = await getAltinFiyatlari();
+
+        // Seçilen vade süresine göre belirli sayıda veriyi al
+        const altinFiyatlari = allAltinFiyatlari.slice(0, vadeSuresi);
+
+        // Başlangıçtaki miktarı belirtilen altın fiyatına bölme işlemi
+        const alinanAltin = baslangicPara / altinFiyatlari[0];
+        const eldekiParalar = Array(altinFiyatlari.length).fill(alinanAltin);
+
+        for (let i = 1; i < altinFiyatlari.length; i++) {
+            const yeniParaMiktar = eldekiParalar[i - 1] * altinFiyatlari[i];
+            eldekiParalar.push(yeniParaMiktar);
+        }
+
+        if (eldekiParalar) {
+            // Eğer mevcut bir grafik varsa, önce onu yok et
+            if (myChart) {
+                myChart.destroy();
+            }
+            console.log(eldekiParalar)
+            eldekiParalar.splice(0,vadeSuresi-1);
+
+            const ctx = document.getElementById('altinChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: eldekiParalar.length }, (_, i) => `${i + 1}. Ay`), // Dinamik etiketleri oluştur
+                    datasets: [{
+                        label: 'Elimizdeki Para',
+                        data: eldekiParalar,
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // Tüm altın fiyatlarını çekme fonksiyonu
+    async function getAltinFiyatlari() {
+        try {
+            const response = await fetch('http://localhost:3000/api/altin-fiyatlari');
+            const result = await response.json();
+
+            if (result.success) {
+                return result.altinFiyati;
+            } else {
+                console.error(result.message);
+                return null;
+            }
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
+</script>
+
+
+
+
     <script>
       document.getElementById("cikisYap").addEventListener("click", function() {
           window.location.href = "login.html"; // Sayfa yönlendirme işlemi

@@ -14,13 +14,13 @@ class Response {
     });
   }
 
-  error500(res) {
-    return res.status(500).json({
+  error500() {
+    return {
       success: false,
       message: "Internal Server Error",
-    });
+    };
   }
-
+  
   kayit_silme(res) {
     return res.status(200).json({
       success: this.success,

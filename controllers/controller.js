@@ -26,6 +26,41 @@ const login = async (req, res) => {
     }
   });
 };
+
+const getAltinFiyatlari = async (req, res) => {
+  try {
+    // Tüm altın fiyatlarını çekme işlemini yapın
+    const [rows] = await dbConn.promise().query('SELECT altinfiyati FROM altinfiyatlari');
+
+    if (rows && rows.length > 0) {
+      // Sadece null olmayan fiyatları al
+      const altinFiyatlari = rows
+        .map(row => row.altinfiyati)
+        .filter(fiyat => fiyat !== null);
+
+      if (altinFiyatlari.length > 0) {
+        return res.json({ success: true, altinFiyati: altinFiyatlari });
+      } else {
+        return res.status(203).json({
+          success: false,
+          message: 'Tüm altın fiyatları null',
+        });
+      }
+    } else {
+      return res.status(203).json({
+        success: false,
+        message: 'Altın fiyatları bulunamadı',
+      });
+    }
+  } catch (error) {
+    console.error('Altın fiyatlarını çekerken bir hata oluştu:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Altın fiyatları çekilemedi',
+    });
+  }
+};
+
 const getMusteriler = async (req, res) => {
   try {
     const result = await dbConn.promise().query('SELECT id, adSoyad, para FROM musteriler');
@@ -45,30 +80,6 @@ const getMusteriler = async (req, res) => {
       success: false,
       message: 'Müşteri verileri çekilemedi',
     });
-  }
-};
-const getFaizOranlari = async (req, res) => {
-  try {
-    const [rows, fields] = await dbConnection.execute('SELECT oran FROM faizOranlari');
-    
-    if (rows.length > 0) {
-      const faizOranlari = rows.map(row => row.oran);
-      res.json(faizOranlari);
-    } else {
-      res.status(203).json({
-        success: false,
-        message: 'Faiz oranı bulunamadı',
-      });
-    }
-  } catch (error) {
-    console.error('Faiz oranlarını çekerken bir hata oluştu:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Faiz oranları çekilemedi',
-    });
-  } finally {
-    // Bağlantıyı kapat
-    await dbConnection.end();
   }
 };
 const getMusteriById = async (req, res) => {
@@ -94,8 +105,7 @@ const getMusteriById = async (req, res) => {
     });
   }
 };
-
-module.exports = { login, getMusteriler, getMusteriById };
+module.exports = { login, getMusteriler, getMusteriById,getAltinFiyatlari};
 /* const yoneticiEkle=async(req,res)=>{
    const kullanici_adi=req.body.kullanici_adi
    const sifre=await bcrypt.hash(req.body.sifre,10)

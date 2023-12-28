@@ -1,4 +1,3 @@
-// response.js
 class Response {
   constructor(data, message, success = true) {
     this.data = data;
@@ -14,13 +13,13 @@ class Response {
     });
   }
 
-  error500() {
-    return {
+  error500(res) {
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-    };
+    });
   }
-  
+
   kayit_silme(res) {
     return res.status(200).json({
       success: this.success,

@@ -22,6 +22,7 @@
 </head>
 
 <body class="sb-nav-fixed">
+<?php include 'calisanTablo.php' ?>
   <nav class="sb-topnav navbar navbar-expand navbar-warning bg-success">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="index.html">GİGABANK</a>
@@ -97,7 +98,7 @@
              Müşteri Altın Geliri Hesapla
             </a>        
             <div class="sb-sidenav-menu-heading">Çalışan İşlemleri</div>
-            <a class="nav-link" href="urunListele.php">
+            <a class="nav-link" href="calisanVerimlilikHesapla.html">
               <div class="sb-nav-link-icon">
                 <i class="fa fa-align-left"></i>
               </div>
@@ -132,7 +133,7 @@
               <div class="sb-nav-link-icon">
                 <i class="fa fa-truck-field"></i>
               </div>
-              Yöneticileri Listele
+              Çalışan Listele
             </a>
           </div>
         </div>
@@ -140,133 +141,14 @@
     </div>
     <div id="layoutSidenav_content">
       <main>
-        <div class="container-fluid px-4">
-          <h1 class="mt-4">Gösterge Paneli</h1>
-          <div class="row">
-            <div class="col-xl-5 mb-4">
-              <div class="card">
-                <div class="card-header">
-                  <i class="fas fa-chart-area me-1"></i>
-                  Paralarına Göre Ayrılmış Müşterilerimiz
-                </div>
-                <canvas id="myChart"></canvas>
-              </div>
-            </div>
-            <div class="col-xl-1 mb-4"></div>
-            <div class="col-xl-4 mb-4">
-              <div class="card">
-                <div class="card-header">
-                  <i class="fas fa-chart-area me-1"></i>
-                  Unvanlara ayrılmış çalışanlarımız
-                </div>
-                <canvas id="myChart2"></canvas>
-              </div>
-            </div>
+      <div class="card mb-4">
+          <div class="card-body">
+            <?php echo $table; ?>
           </div>
         </div>
-    </div>
     </main>
   </div>
   </div>
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Unvanları çek
-    fetch('unvanlar.php')
-        .then(response => response.json())
-        .then(unvanlar => {
-            // Çalışan sayılarını çek
-            fetch('calisanlarUnvanGrafik.php')
-                .then(response => response.json())
-                .then(calisanSayilari => {
-                    console.log(unvanlar);
-                    console.log(calisanSayilari);
-
-                    // Chart oluştur
-                    const ctx = document.getElementById('myChart2').getContext('2d');
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: unvanlar.map(unvan => unvan.unvanAD),
-                            datasets: [{
-                                label: 'Çalışan Sayısı',
-                                data: calisanSayilari.map(calisan => calisan.calisanSayisi),
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                x: {
-                                    beginAtZero: true
-                                },
-                                y: {
-                                    beginAtZero: true
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            },
-                            elements: {
-                                bar: {
-                                    barThickness: 10, // Bar kalınlığını buradan ayarlayabilirsiniz
-                                    maxBarThickness: 100,
-                                    minBarThickness: 10,
-                                    categoryPercentage: 1 // Etiketler arasındaki boşluğu kontrol edebilirsiniz
-                                }
-                            }
-                        }
-                    });
-                })
-                .catch(error => console.error('Çalışan sayıları çekme hatası:', error));
-        })
-        .catch(error => console.error('Unvanlar çekme hatası:', error));
-});
-
-</script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Müşteri sayıları JSON formatında al
-        fetch('musteriBilgisiCek.php') // PHP dosyanızın adını doğru bir şekilde güncelleyin
-            .then(response => response.json())
-            .then(customerCounts => {
-                // Chart oluştur
-                const ctx = document.getElementById('myChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['0 - 20000', '20001 - 30000', '30001 ve üzeri'], // Para aralıkları
-                        datasets: [{
-                            label: 'Müşteri Sayısı',
-                            data: customerCounts,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error('Veri çekme hatası:', error));
-    });
-</script>
   <script>
     document.getElementById("cikisYap").addEventListener("click", function() {
         window.location.href = "login.html"; // Sayfa yönlendirme işlemi

@@ -60,11 +60,11 @@
               </div>
               Gösterge Paneli
             </a>
-            <a class="nav-link" href="paraYonet.html">
+            <a class="nav-link" href="subeHacmi.html">
               <div class="sb-nav-link-icon">
                 <i class="fas fa-dolly"></i>
               </div>
-              Para Yönet
+              Şubenin İşlem Hacmi
             </a>
             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
           <!--    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
@@ -103,175 +103,152 @@
               </div>
               Çalışan Verimlilik Hesapla
             </a>
-            <a class="nav-link" href="calisanPrimHesapla.html">
+            <a class="nav-link" href="tedarikciListele.php">
               <div class="sb-nav-link-icon">
                 <i class="fa fa-truck-field"></i>
               </div>
               Çalışan Prim Hesapla
             </a>
-           <div class="sb-sidenav-menu-heading">Listeleme İşlemleri</div>
-           <a class="nav-link" href="calisanListele.php">
-            <div class="sb-nav-link-icon">
-              <i class="fa fa-truck-field"></i>
-            </div>
-            Çalışan Listele
-          </a>
-          <a class="nav-link" href="musteriListele.php">
-            <div class="sb-nav-link-icon">
-              <i class="fa fa-truck-field"></i>
-            </div>
-            Müşteri Listele
-          </a>
-            <a class="nav-link" href="subeListele.php">
-              <div class="sb-nav-link-icon">
-                <i class="fa fa-truck-field"></i>
-              </div>
-             Şubeleri Listele
-            </a>
-            <a class="nav-link" href="yoneticiListele.php">
-              <div class="sb-nav-link-icon">
-                <i class="fa fa-truck-field"></i>
-              </div>
-              Yöneticileri Listele
-            </a>
+           
           </div>
         </div>
       </nav>
     </div>
     <div id="layoutSidenav_content">
       <main>
-        <div class="container-fluid px-4">
-          <h1 class="mt-4">Gösterge Paneli</h1>
-          <div class="row">
-            <div class="col-xl-5 mb-4">
-              <div class="card">
-                <div class="card-header">
-                  <i class="fas fa-chart-area me-1"></i>
-                  Paralarına Göre Ayrılmış Müşterilerimiz
-                </div>
-                <canvas id="myChart"></canvas>
-              </div>
-            </div>
-            <div class="col-xl-1 mb-4"></div>
-            <div class="col-xl-4 mb-4">
-              <div class="card">
-                <div class="card-header">
-                  <i class="fas fa-chart-area me-1"></i>
-                  Unvanlara ayrılmış çalışanlarımız
-                </div>
-                <canvas id="myChart2"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>
-    </main>
+          <main>
+              <div class="container">
+                <section class="content">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Çalışan Verimliliği Hesaplamas</h3>
+                    </div>
+      
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-group row">
+                            <label>Çalışan Adı</label>
+                            <div class="col-sm-10">
+                              <select class="form-control" id="calisanSec" required>
+  <option value="" disabled selected>Çalışan Seçin</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                          <div class="row">
+                              <div class="col">
+                                <div class="form-group row">
+                                  <label>Maaşı</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" placeholder="Maaşı" class="form-control" id="maas">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col">
+                                    <div class="form-group row">
+                                      <label>Hedefe Ulaşma Yüzdesi</label>
+                                      <div class="col-sm-10">
+                                        <input type="text" placeholder="Hedefe Ulaşma Yüzdesi" class="form-control" id="hedefYuzde">
+                                      </div>
+                                    </div>
+                                  </div>
+                    </div>
+                    <div class="result mt-3">
+                      <strong>Primli Maaş:</strong> <span id="primliMaas"></span>
+                  </div>
+                    <button type="button" id="calculateBtn" class="btn btn-primary mx-auto col-3 my-1">
+                      Prim Hesapla
+                    </button>
+                  </main>
   </div>
   </div>
+  
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Unvanları çek
-    fetch('unvanlar.php')
-        .then(response => response.json())
-        .then(unvanlar => {
-            // Çalışan sayılarını çek
-            fetch('calisanlarUnvanGrafik.php')
-                .then(response => response.json())
-                .then(calisanSayilari => {
-                    console.log(unvanlar);
-                    console.log(calisanSayilari);
+    // Tüm fetch işlemlerini birleştirip ardından sayfa içinde gerekli yerlere verileri yerleştirme
+    async function fetchDataAndPopulate() {
+        try {
+            // Çalışanları getir
+            const calisanlarResponse = await fetch('http://localhost:3000/api/calisanlar');
+            const calisanlarData = await calisanlarResponse.json();
 
-                    // Chart oluştur
-                    const ctx = document.getElementById('myChart2').getContext('2d');
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: unvanlar.map(unvan => unvan.unvanAD),
-                            datasets: [{
-                                label: 'Çalışan Sayısı',
-                                data: calisanSayilari.map(calisan => calisan.calisanSayisi),
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                x: {
-                                    beginAtZero: true
-                                },
-                                y: {
-                                    beginAtZero: true
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            },
-                            elements: {
-                                bar: {
-                                    barThickness: 10, // Bar kalınlığını buradan ayarlayabilirsiniz
-                                    maxBarThickness: 100,
-                                    minBarThickness: 10,
-                                    categoryPercentage: 1 // Etiketler arasındaki boşluğu kontrol edebilirsiniz
-                                }
-                            }
-                        }
-                    });
-                })
-                .catch(error => console.error('Çalışan sayıları çekme hatası:', error));
-        })
-        .catch(error => console.error('Unvanlar çekme hatası:', error));
-});
+            // Çalışanları dropdown'a ekle
+            const calisanSec = document.getElementById('calisanSec');
+            calisanlarData.forEach(calisan => {
+                const option = document.createElement('option');
+                option.value = calisan.id;
+                option.text = calisan.adSoyad;
+                calisanSec.appendChild(option);
+            });
 
+            // Diğer fetch işlemlerini buraya ekleyebilirsin
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Sayfa yüklendiğinde çalışacak fonksiyon
+    window.onload = function () {
+            fetchDataAndPopulate();
+
+            document.getElementById('calculateBtn').addEventListener('click', calculatePrim);
+        };
+
+        function calculatePrim() {
+            const calisanSec = document.getElementById('calisanSec');
+            const selectedCalisanId = calisanSec.value;
+            
+            // Burada seçilen çalışanın maaş ve hedef yüzdesi bilgilerini alabilirsin
+            const maas = parseFloat(document.getElementById('maas').value);
+            const hedefYuzde = parseFloat(document.getElementById('hedefYuzde').value);
+
+            // Hesaplama yap
+            let primOrani = 0;
+            if (hedefYuzde >= 85) {
+                primOrani = 0.3;
+            } else if (hedefYuzde >= 70) {
+                primOrani = 0.2;
+            } else if (hedefYuzde >= 60) {
+                primOrani = 0.1;
+            }
+
+            const primliMaas = maas + maas * primOrani;
+
+            // Sonucu ekrana yazdır
+            document.getElementById('primliMaas').textContent = primliMaas.toFixed(2);
+        }
+    </script>
 </script>
+<script>
+document.getElementById('calisanSec').addEventListener('change', function() {
+    const selectedWorkerID = this.value;
+    console.log(selectedWorkerID)
+    fetch(`http://localhost:3000/api/calisan/${selectedWorkerID}`)
+        .then(response => response.json())
+        .then(selectedCalisan => {
+            const maasInput = document.getElementById('maas');
+            const hedefYuzdeInput = document.getElementById('hedefYuzde');
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Müşteri sayıları JSON formatında al
-        fetch('musteriBilgisiCek.php') // PHP dosyanızın adını doğru bir şekilde güncelleyin
-            .then(response => response.json())
-            .then(customerCounts => {
-                // Chart oluştur
-                const ctx = document.getElementById('myChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['0 - 20000', '20001 - 30000', '30001 ve üzeri'], // Para aralıkları
-                        datasets: [{
-                            label: 'Müşteri Sayısı',
-                            data: customerCounts,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error('Veri çekme hatası:', error));
-    });
+            maasInput.value = selectedCalisan.maas || '';
+            hedefYuzdeInput.value = selectedCalisan.hedefYuzde || '';
+        })
+        .catch(error => console.error(error));
+});
 </script>
   <script>
     document.getElementById("cikisYap").addEventListener("click", function() {
         window.location.href = "login.html"; // Sayfa yönlendirme işlemi
     });
     </script>
+
+
+<script>
+  document.getElementById("cikisYap").addEventListener("click", function() {
+      window.location.href = "login.html"; // Sayfa yönlendirme işlemi
+  });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
   <script src="js/scripts.js"></script>

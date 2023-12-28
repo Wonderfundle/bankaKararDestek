@@ -26,30 +26,76 @@ const login = async (req, res) => {
     }
   });
 };
+const getMusteriler = async (req, res) => {
+  try {
+    const result = await dbConn.promise().query('SELECT id, adSoyad, para FROM musteriler');
 
-const musteriler = async (req, res) => {
-    try {
-      const result = await dbConn.promise().query("SELECT id, adSoyad, tarih, gelir, para, krediSkoru, varlikSayisi FROM musteriler");
-      
-      if (result[0].length > 0) {
-        return new Response(result[0]).basarili_giris(res);
-      } else {
-        return res.status(203).json({
-          success: false,
-          message: "Müşteri bulunamadı"
-        });
-      }
-    } catch (error) {
-      console.error("Müşteri verilerini çekerken bir hata oluştu:", error);
-      return res.status(500).json({
+    if (result[0].length > 0) {
+      const musteriVerileri = result[0];
+      return res.json(musteriVerileri);
+    } else {
+      return res.status(203).json({
         success: false,
-        message: "Müşteri verileri çekilemedi"
+        message: 'Müşteri bulunamadı',
       });
     }
-  };
+  } catch (error) {
+    console.error('Müşteri verilerini çekerken bir hata oluştu:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Müşteri verileri çekilemedi',
+    });
+  }
+};
+const getFaizOranlari = async (req, res) => {
+  try {
+    const [rows, fields] = await dbConnection.execute('SELECT oran FROM faizOranlari');
+    
+    if (rows.length > 0) {
+      const faizOranlari = rows.map(row => row.oran);
+      res.json(faizOranlari);
+    } else {
+      res.status(203).json({
+        success: false,
+        message: 'Faiz oranı bulunamadı',
+      });
+    }
+  } catch (error) {
+    console.error('Faiz oranlarını çekerken bir hata oluştu:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Faiz oranları çekilemedi',
+    });
+  } finally {
+    // Bağlantıyı kapat
+    await dbConnection.end();
+  }
+};
+const getMusteriById = async (req, res) => {
+  try {
+    const musteriId = req.params.id; // URL'den müşteri ID'sini al
 
-module.exports = { login,musteriler };
+    const result = await dbConn.promise().query('SELECT id, adSoyad, para FROM musteriler WHERE id = ?', [musteriId]);
 
+    if (result[0].length > 0) {
+      const musteriBilgisi = result[0][0];
+      return res.json(musteriBilgisi);
+    } else {
+      return res.status(203).json({
+        success: false,
+        message: 'Müşteri bulunamadı',
+      });
+    }
+  } catch (error) {
+    console.error('Müşteri bilgilerini çekerken bir hata oluştu:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Müşteri bilgileri çekilemedi',
+    });
+  }
+};
+
+module.exports = { login, getMusteriler, getMusteriById };
 /* const yoneticiEkle=async(req,res)=>{
    const kullanici_adi=req.body.kullanici_adi
    const sifre=await bcrypt.hash(req.body.sifre,10)
@@ -141,4 +187,3 @@ const musteri_guncelle=(req,res)=>{
         }
     })
 } */
-module.exports={login}

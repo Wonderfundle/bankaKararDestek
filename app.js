@@ -4,6 +4,7 @@ const session = require('express-session');
 const cors = require('cors');
 const router=require("./routers")
 const app = express()
+
 //Require = Import in Python
 app.get('/', function (req, res) {
   res.send('Hello World')
@@ -14,11 +15,6 @@ app.get('/login', function (req, res) {
   res.send('app sayfası')
 })
 
-app.use(session({
-    secret: 'Merhaba',
-    resave: false,
-    saveUninitialized: true
-  }));
 
   app.post('/api/logout', (req, res) => {
     // Oturumu sonlandır
@@ -31,8 +27,25 @@ app.use(session({
       }
     });
   });
-  app.get('/musteriler', (req, res) => {
-    res.json(musteriler);
+  app.get('/musteriler', async (req, res) => {
+    try {
+        const result = await dbConn.promise().query("SELECT id, adSoyad, tarih, gelir, para, krediSkoru, varlikSayisi FROM musteriler");
+        
+        if (result[0].length > 0) {
+            return res.json(new Response(result[0]).basarili_giris(res));
+        } else {
+            return res.status(203).json({
+                success: false,
+                message: "Müşteri bulunamadı"
+            });
+        }
+    } catch (error) {
+        console.error("Müşteri verilerini çekerken bir hata oluştu:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Müşteri verileri çekilemedi"
+        });
+    }
 });
   
 app.use(cors());

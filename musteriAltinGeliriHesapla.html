@@ -18,6 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"  />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-warning bg-success">
@@ -167,65 +168,158 @@
       </div>
       <div id="layoutSidenav_content">
         <main>
-            <table id="musteriTablosu" class="display">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Ad Soyad</th>
-                  <th>Tarih</th>
-                  <th>Gelir</th>
-                  <th>Para</th>
-                  <th>Kredi Skoru</th>
-                  <th>Varlık Sayısı</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Müşteri verileri burada dinamik olarak eklenecek -->
-              </tbody>
-            </table>
-          </main>
+            <div class="container">
+              <section class="content">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Müşteri Faiz Oranı Hesapla</h3>
+                  </div>
+    
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group row">
+                          <label>Müşteri Adı</label>
+                          <div class="col-sm-10">
+                            <select class="form-control" id="musteriSec" required>
+                                <option value="" disabled selected>Müşteri Seçin</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group row">
+                          <label>Müşterinin Bankadaki Miktarı</label>
+                          <div class="col-sm-10">
+                            <input type="text" placeholder="Müşteri Seçilmedi" class="form-control" id="para">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-group row">
+                            <label>Faiz Oranı</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="faizOrani">
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                    <option value="35">35</option>
+                                    <option value="40">40</option>
+                                </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                        <div class="col">
+                            <div class="form-group row">
+                                <label>Faiz Süresi</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="faizSuresi">
+                                        <option value="6">6 Ay</option>
+                                        <option value="12">1 Yıl</option>
+                                        <option value="24">2 Yıl</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+                  <button type="button" id="calculateBtn" class="btn btn-primary mx-auto col-3 my-1">
+                    Faiz Hesapla
+                  </button>
+                  <canvas id="myChart" width="400" height="200"></canvas>
+                </main>
     </div>
     </div>
     <script>
-      // API'den müşteri verilerini çek
-      fetch('http://localhost:3000/api/musteriler')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          
-          // HTML tablosunu doldur
-          const musteriTablosu = document.getElementById('musteriTablosu');
-          const tbody = musteriTablosu.querySelector('tbody');
-    
-          data.forEach(musteri => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${musteri.id}</td>
-              <td>${musteri.adSoyad}</td>
-              <td>${musteri.tarih}</td>
-              <td>${musteri.gelir}</td>
-              <td>${musteri.para}</td>
-              <td>${musteri.krediSkoru}</td>
-              <td>${musteri.varlikSayisi}</td>
-            `;
-            tbody.appendChild(row);
-          });
-    
-          // DataTables kullanıyorsanız, tabloyu başlatın
-          $(document).ready(function () {
-            $('#musteriTablosu').DataTable();
-          });
-        })
-        .catch(error => {
-          console.error('Fetch veya JSON dönüşüm hatası:', error);
-          // Hata durumunda kullanıcıya uygun bir mesaj gösterme işlemlerini ekleyebilirsiniz
+        fetch('http://localhost:3000/api/musteriler') // API endpoint'iniz
+    .then(response => response.json())
+    .then(data => {
+        const musteriSec = document.getElementById('musteriSec');
+        data.forEach(musteri => {
+            const option = document.createElement('option');
+            option.value = musteri.id; // Müşteri ID'sini option değerine ata
+            option.text = musteri.adSoyad; // Müşteri adını option metnine ata
+            musteriSec.appendChild(option);
         });
+    })
+    .catch(error => console.error(error));
     </script>
-        
+<script>
+    let myChart; 
+
+    document.getElementById('calculateBtn').addEventListener('click', function () {
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        const faizOraniYillik = parseFloat(document.getElementById('faizOrani').value);
+        const faizSuresiYil = parseFloat(document.getElementById('faizSuresi').value);
+        const para = parseFloat(document.getElementById('para').value);
+
+        const faizOraniAylık = faizOraniYillik / 12;
+        const faizSuresiAylar = faizSuresiYil;
+
+        const toplamFaizTutari = [];
+        const labels = [];
+        let toplamPara = para;
+
+        for (let i = 1; i <= faizSuresiAylar; i++) {
+            labels.push(`Ay ${i}`);
+            const aylıkFaizTutarı = toplamPara * (faizOraniAylık / 100); // Hata burada düzeltildi
+            toplamPara += aylıkFaizTutarı;
+            toplamFaizTutari.push(parseFloat(toplamPara.toFixed(1)));
+        }
+
+        // Sadece girilen faiz süresi kadar olan verileri al
+        const trimmedLabels = labels.slice(0, faizSuresiAylar);
+        const trimmedToplamFaizTutari = toplamFaizTutari.slice(0, faizSuresiAylar);
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trimmedLabels,
+                datasets: [{
+                    label: 'Faiz Geliri',
+                    data: trimmedToplamFaizTutari,
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+   <script>
+    document.getElementById('musteriSec').addEventListener('change', function() {
+      const selectedCustomerId = this.value; // Seçilen müşterinin ID'sini al
+  
+      // Seçilen müşterinin bilgilerini almak için yeni bir API çağrısı yap
+      fetch(`http://localhost:3000/api/musteri/${selectedCustomerId}`)
+        .then(response => response.json())
+        .then(selectedMusteri => {
+          // Alınan müşteri bilgilerini kullanarak, müşterinin parasını göster
+          const paraInput = document.getElementById('para');
+          paraInput.value = selectedMusteri.para;
+        })
+        .catch(error => console.error(error));
+    });
+  </script>
+  
     <script>
       document.getElementById("cikisYap").addEventListener("click", function() {
           window.location.href = "login.html"; // Sayfa yönlendirme işlemi
@@ -235,8 +329,6 @@
       crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="assets/demo/chart-area-demo.js"></script>
-    <script src="assets/demo/chart-bar-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
       crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>

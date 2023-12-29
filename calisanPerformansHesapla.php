@@ -8,6 +8,10 @@
   <meta name="author" content="" />
   <title>Bigabank - Giriş</title>
   <link href="css/styles.css" rel="stylesheet" />
+  <!-- progressbar.js -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/css/progressbar.css">
+<script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/progressbar.js"></script>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -19,6 +23,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"  />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <style>
+    #puanDiv {
+  display: none; /* Başlangıçta gizli yapılır */
+}
+  #progressbarContainer {
+  margin: 0 auto; /* Ortalamak için */
+  display: table; /* Dikey hizalamak için */
+}
+ /* Renk sınıfları eklendi */
+ .progress-bar-yellow {
+            background-color: #FFD700 !important;
+        }
+
+        .progress-bar-red {
+            background-color: #FF0000 !important;
+        }
+
+        .progress-bar-green {
+            background-color: #008000 !important;
+        }
+        #progressbarContainer {
+  width: 200px; /* Örnek bir genişlik değeri */
+  height: 200px; /* Örnek bir yükseklik değeri */
+  position: relative;
+}
+  </style>
   <?php
 include("baglan.php");
 $queryCalisanlar = "SELECT id, adSoyad,unvanID,sure,hedefYuzde FROM calisanlar";
@@ -237,29 +267,48 @@ $resultCalisanlar = mysqli_query($conn, $queryCalisanlar);
                                 </div>
                             </div>
                         </div>
-                       
+                        <div class="row">
+  <div class="col">
+    <div class="form-group row">
+      <label>Performans Göstergesi</label>
+      <div class="col-sm-5">
+        <!-- Yuvarlak İlerleme Çubuğu -->
+        <div id="progressbarContainer"></div>
+      </div>
+    </div>
+  </div>
+</div>
                     </div>
                     </div>
                     <button type="button" onclick="calisanPerformansHesapla()" id="Hesapla" class="btn btn-primary mx-auto col-3 my-1">
                         Hesapla
                     </button>
                     <div class="row">
-                            <div class="col">
-                                <div class="form-group row">
-                                    <label>Toplam Puanı</label>
-                                    <div class="col-sm-10">
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="toplamPuan">
-                                    </div>
-                                    <div id="toplamPuanIndicator"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  <div class="col" id="puanDiv">
+    <div class="form-group row">
+      <label>Toplam Puanı</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="toplamPuan">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col" id="puanDiv">
+    <div  class="form-group row">
+      <label>Toplam Puanı</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="toplamPuanIndicator">
+      </div>
+    </div>
+  </div>
+</div>
+
+
                 </div>
             </section>
         </div>
     </main>
+    
     <script>
     // adSoyad seçildiğinde bu fonksiyon çalışacak
     function adSoyadDegisti() {
@@ -315,170 +364,171 @@ $resultCalisanlar = mysqli_query($conn, $queryCalisanlar);
 
         // Hesaplamaları yapacak fonksiyon
         function hesaplamalariYap(bilgiler) {
-          var toplamPuan = 0;
+            var toplamPuan = 0;
 
-          // Unvan ID'ye göre puan ekleme
-          switch (bilgiler.unvanID) {
-            case 1:
-              toplamPuan += 1;
-              break;
-            case 2:
-              toplamPuan += 2;
-              break;
-            case 3:
-              toplamPuan += 3;
-              break;
-            case 4:
-              toplamPuan += 4;
-              break;
-          }
+            // Unvan ID'ye göre puan ekleme
+            switch (parseInt(bilgiler.unvanID)) {
+                case 1:
+                    toplamPuan += 1;
+                    break;
+                case 2:
+                    toplamPuan += 2;
+                    break;
+                case 3:
+                    toplamPuan += 3;
+                    break;
+                case 4:
+                    toplamPuan += 4;
+                    break;
+            }
 
-          // Maaşa göre puan ekleme
-          if (bilgiler.maas < 20000) {
-            toplamPuan += 3;
-          } else {
-            toplamPuan += 1;
-          }
+            // Maaşa göre puan ekleme
+            if (bilgiler.maas < 20000) {
+                toplamPuan += 3;
+            } else {
+                toplamPuan += 1;
+            }
 
-          // Çalışma süresine göre puan ekleme
-          var gunumuz = new Date();
-          var calismaSuresi = gunumuz.getFullYear() - new Date(bilgiler.sure).getFullYear();
-          if (calismaSuresi >= 3) {
-            toplamPuan += 5;
-          } else if (calismaSuresi >= 2) {
-            toplamPuan += 2;
-          } else {
-            toplamPuan += 1;
-          }
+            // Hedef yüzdesine göre puan ekleme
+            if (bilgiler.hedefYuzde >= 60 && bilgiler.hedefYuzde < 70) {
+                toplamPuan += 1;
+            } else if (bilgiler.hedefYuzde >= 70 && bilgiler.hedefYuzde < 80) {
+                toplamPuan += 2;
+            } else if (bilgiler.hedefYuzde >= 80 && bilgiler.hedefYuzde < 90) {
+                toplamPuan += 4;
+            } else if (bilgiler.hedefYuzde >= 90 && bilgiler.hedefYuzde <= 100) {
+                toplamPuan += 8;
+            } else if (bilgiler.hedefYuzde < 60) {
+                toplamPuan -= 5;
+            }
 
-          // Hedef yüzdesine göre puan ekleme
-          var hedefYuzdesi = parseFloat(bilgiler.hedefYuzde);
-          if (hedefYuzdesi >= 60 && hedefYuzdesi < 70) {
-            toplamPuan += 1;
-          } else if (hedefYuzdesi >= 70 && hedefYuzdesi < 80) {
-            toplamPuan += 2;
-          } else if (hedefYuzdesi >= 80 && hedefYuzdesi < 90) {
-            toplamPuan += 4;
-          } else if (hedefYuzdesi >= 90 && hedefYuzdesi <= 100) {
-            toplamPuan += 8;
-          } else if (hedefYuzdesi < 60) {
-            toplamPuan -= 5;
-          }
-
-          // Toplam puanı bir değişkene ata
-          document.getElementById("toplamPuan").value = toplamPuan;
+            // Toplam puanı bir değişkene ata
+            return toplamPuan;
         }
+
 
         // adSoyad değiştiğinde adSoyadDegisti fonksiyonunu çağır
         document.getElementById("adSoyad").addEventListener("change", adSoyadDegisti);
 
         // Sayfa yüklendiğinde de hesaplamaları yap
-        document.addEventListener("DOMContentLoaded", function () {
-          // Seçilen çalışanın ID'sini al
-          var calisanID = document.getElementById("adSoyad").value;
+        var bar;
 
-          // AJAX ile veri gönderme
-          $.ajax({
-            type: "POST",
-            url: "getCalisanBilgileri.php",  // Bu dosya çalışan bilgilerini getirecek
-            data: { calisanID: calisanID },
-            success: function (response) {
-              // Gelen veriyi işleme
-              var bilgiler = JSON.parse(response);
-              // Form elemanlarına bilgileri yerleştirme
-              document.getElementById("unvanID").value = bilgiler.unvanID;
-              document.getElementById("sure").value = bilgiler.sure;
-              document.getElementById("maas").value = bilgiler.maas;
-              document.getElementById("hedefYuzde").value = bilgiler.hedefYuzde;
-              // Hesaplamaları yap
-              hesaplamalariYap(bilgiler);
-            }
-          });
-        });
-         // Hesapla butonuna tıklandığında
-         function calisanPerformansHesapla() {
-    // Kullanıcının girdiği değerleri al
-    var unvanID = document.getElementById("unvanID").value;
-    var maas = parseFloat(document.getElementById("maas").value);
-    var hedefYuzde = parseFloat(document.getElementById("hedefYuzde").value);
-
-    // Hesaplamaları yap
-    var toplamPuan = 0;
-
-    // Unvan ID'ye göre puan ekleme
-    switch (parseInt(unvanID)) {
-        case 1:
-            toplamPuan += 1;
-            break;
-        case 2:
-            toplamPuan += 2;
-            break;
-        case 3:
-            toplamPuan += 3;
-            break;
-        case 4:
-            toplamPuan += 4;
-            break;
+document.addEventListener("DOMContentLoaded", function () {
+  // Initialize the progress bar when the page is loaded
+  bar = new ProgressBar.Circle('#progressbarContainer', {
+    color: '#4CAF50', // İlerleme çubuğu rengi (örnek: yeşil)
+    strokeWidth: 6, // İlerleme çubuğu kalınlığı
+    trailWidth: 1, // İz kalınlığı (görsel geride kalan kısım)
+    duration: 2000, // Animasyon süresi (ms)
+    text: {
+      value: '0', // Gösterge metni başlangıç değeri
+      className: 'progressbar-text' // Gösterge metni için CSS sınıfı
+    },
+    step: function (state, bar) {
+      bar.setText(Math.round(bar.value() * 100)); // İlerleme yüzdesini göster
     }
+  });
+});
 
-    // Maaşa göre puan ekleme
-    if (maas < 20000) {
-        toplamPuan += 3;
-    } else {
-        toplamPuan += 1;
+// Hesapla butonuna tıklandığında
+    function calisanPerformansHesapla() {
+  // Reset the progress bar before each calculation
+  bar.destroy();
+  bar = new ProgressBar.Circle('#progressbarContainer', {
+    color: '#4CAF50',
+    strokeWidth: 6,
+    trailWidth: 1,
+    duration: 2000,
+    text: {
+      value: '0',
+      className: 'progressbar-text'
+    },
+    step: function (state, bar) {
+      bar.setText(Math.round(bar.value() * 100));
     }
+  });
 
-    // Hedef yüzdesine göre puan ekleme
-    if (hedefYuzde >= 60 && hedefYuzde < 70) {
-        toplamPuan += 1;
-    } else if (hedefYuzde >= 70 && hedefYuzde < 80) {
-        toplamPuan += 2;
-    } else if (hedefYuzde >= 80 && hedefYuzde < 90) {
-        toplamPuan += 4;
-    } else if (hedefYuzde >= 90 && hedefYuzde <= 100) {
-        toplamPuan += 8;
-    } else if (hedefYuzde < 60) {
-        toplamPuan -= 5;
+  // Kullanıcının girdiği değerleri al
+  var unvanID = document.getElementById("unvanID").value;
+  var maas = parseFloat(document.getElementById("maas").value);
+  var hedefYuzde = parseFloat(document.getElementById("hedefYuzde").value);
+
+  // AJAX ile veri gönderme
+  var calisanID = document.getElementById("adSoyad").value;
+  $.ajax({
+    type: "POST",
+    url: "getCalisanBilgileri.php",
+    data: { calisanID: calisanID },
+    success: function (response) {
+      // Gelen veriyi işleme
+      var bilgiler = JSON.parse(response);
+
+      // Hesaplamaları yap
+      var toplamPuan = hesaplamalariYap(bilgiler);
+
+      // Toplam puanı bir değişkene ata
+      document.getElementById("toplamPuan").value = toplamPuan;
+
+      // Yuvarlak ilerleme çubuğunu güncelle
+      bar.animate(toplamPuan / 15);; // Yüzde cinsinden değer bekler
+
+      // Renk sınıflarını uygula
+      if (toplamPuan <= 5) {
+        bar.path.setAttribute('class', 'progress-bar progress-bar-red');
+      } else if (toplamPuan <= 11) {
+        bar.path.setAttribute('class', 'progress-bar progress-bar-yellow');
+      } else {
+        bar.path.setAttribute('class', 'progress-bar progress-bar-green');
+      }
     }
+  });
+}
 
-    // Toplam puanı bir değişkene ata
-    document.getElementById("toplamPuan").value = toplamPuan;
-    function setPuanIndicator(toplamPuan) {
-  var indicator = document.getElementById("toplamPuanIndicator");
+// Hesaplamaları yapacak fonksiyon
+function hesaplamalariYap(bilgiler) {
+  var toplamPuan = 0;
 
-  // Örnek renk kodları
-  var renkler = {
-    yeşil: "#4CAF50",
-    sarı: "#FFC107",
-    kırmızı: "#FF5722"
-  };
-
-  // Puan aralıklarına göre renk belirleme
-  var renk = renkler.kırmızı; // Varsayılan olarak kırmızı
-
-  if (toplamPuan >= 10) {
-    renk = renkler.yeşil;
-  } else if (toplamPuan >= 5) {
-    renk = renkler.sarı;
+  // Unvan ID'ye göre puan ekleme
+  switch (parseInt(bilgiler.unvanID)) {
+    case 1:
+      toplamPuan += 1;
+      break;
+    case 2:
+      toplamPuan += 2;
+      break;
+    case 3:
+      toplamPuan += 3;
+      break;
+    case 4:
+      toplamPuan += 4;
+      break;
   }
 
-  // Dairenin stilini ve rengini ayarla
-  indicator.style.width = "50px"; // Örnek genişlik
-  indicator.style.height = "50px"; // Örnek yükseklik
-  indicator.style.borderRadius = "50%"; // Yuvarlak şekil
-  indicator.style.backgroundColor = renk; // Renk
+  // Maaşa göre puan ekleme
+  if (bilgiler.maas < 20000) {
+    toplamPuan += 3;
+  } else {
+    toplamPuan += 1;
+  }
 
-  // İsterseniz başka stil ayarları da yapabilirsiniz
+  // Hedef yüzdesine göre puan ekleme
+  if (bilgiler.hedefYuzde >= 60 && bilgiler.hedefYuzde < 70) {
+    toplamPuan += 1;
+  } else if (bilgiler.hedefYuzde >= 70 && bilgiler.hedefYuzde < 80) {
+    toplamPuan += 2;
+  } else if (bilgiler.hedefYuzde >= 80 && bilgiler.hedefYuzde < 90) {
+    toplamPuan += 4;
+  } else if (bilgiler.hedefYuzde >= 90 && bilgiler.hedefYuzde <= 100) {
+    toplamPuan += 8;
+  } else if (bilgiler.hedefYuzde < 60) {
+    toplamPuan -= 5;
+  }
+
+  // Toplam puanı bir değişkene ata
+  return toplamPuan;
 }
-
-// Örnek kullanım
-setPuanIndicator(toplamPuan);
-
-}
-
-      </script>
-
-      <!-- ... (Diğer JavaScript ve jQuery kodları) ... -->
+</script>
+   
 
     </div>
   </div>

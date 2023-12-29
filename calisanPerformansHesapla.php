@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>Bigabank - Giriş</title>
+  <title>GİGABANK</title>
   <link href="css/styles.css" rel="stylesheet" />
   <!-- progressbar.js -->
 <link rel="stylesheet" href="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/1.0.0/dist/css/progressbar.css">

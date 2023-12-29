@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Bigabank - Giriş</title>
+    <title>GİGABANK</title>
     <link href="css/styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -149,13 +149,12 @@
           </nav>
         </div>
       <div id="layoutSidenav_content">
-        <main>
             <main>
                 <div class="container">
                   <section class="content">
                     <div class="card">
                       <div class="card-header">
-                        <h3 class="card-title">Çalışan Verimliliği Hesaplamas</h3>
+                        <h3 class="card-title">Çalışan Verimliliği Hesaplaması</h3>
                       </div>
         
                       <div class="card-body">
@@ -208,10 +207,21 @@
                                       </div>
                                     </div>
                       </div>
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-group row">
+                            <label>Verimlilik Durumu</label>
+                            <div class="col-sm-10">
+                              <input type="text" placeholder="Hedefe Ulaşma Yüzdesi" class="form-control" id="toplamPuan">
+                            </div>
+                          </div>
+                        </div>
+          </div>
+          
                       <button type="button" id="calculateBtn" class="btn btn-primary mx-auto col-3 my-1">
                         Verimlilik Hesapla
                       </button>
-                      <canvas id="myChart" width="400" height="200"></canvas>
+                     <div class=""></div>
                     </main>
     </div>
     </div>
@@ -219,225 +229,164 @@
     <script>
       // Tüm fetch işlemlerini birleştirip ardından sayfa içinde gerekli yerlere verileri yerleştirme
       async function fetchDataAndPopulate() {
-          try {
-              // Çalışanları getir
-              const calisanlarResponse = await fetch('http://localhost:3000/api/calisanlar');
-              const calisanlarData = await calisanlarResponse.json();
-
-              // Çalışanları dropdown'a ekle
-              const calisanSec = document.getElementById('calisanSec');
-              calisanlarData.forEach(calisan => {
-                  const option = document.createElement('option');
-                  option.value = calisan.id;
-                  option.text = calisan.adSoyad;
-                  calisanSec.appendChild(option);
-              });
-
-              // Diğer fetch işlemlerini buraya ekleyebilirsin
-          } catch (error) {
-              console.error(error);
-          }
+        try {
+          // Çalışanları getir
+          const calisanlarResponse = await fetch('http://localhost:3000/api/calisanlar');
+          const calisanlarData = await calisanlarResponse.json();
+    
+          // Çalışanları dropdown'a ekle
+          const calisanSec = document.getElementById('calisanSec');
+          calisanlarData.forEach(calisan => {
+            const option = document.createElement('option');
+            option.value = calisan.id;
+            option.text = calisan.adSoyad;
+            calisanSec.appendChild(option);
+          });
+    
+          // Diğer fetch işlemlerini buraya ekleyebilirsin
+    
+        } catch (error) {
+          console.error(error);
+        }
       }
-
+    
       // Sayfa yüklendiğinde çalışacak fonksiyon
       window.onload = function () {
-          fetchDataAndPopulate();
+        fetchDataAndPopulate();
       };
-
-      // Diğer JavaScript kodları buraya gelecek
-  </script>
- <script>
-  document.getElementById('calisanSec').addEventListener('change', function() {
-      const selectedWorkerID = this.value;
-      console.log(selectedWorkerID)
-      fetch(`http://localhost:3000/api/calisan/${selectedWorkerID}`)
+    
+      document.getElementById('calisanSec').addEventListener('change', function () {
+        const selectedWorkerID = this.value;
+        console.log(selectedWorkerID);
+        fetch(`http://localhost:3000/api/calisan/${selectedWorkerID}`)
           .then(response => response.json())
           .then(selectedCalisan => {
-              const unvanIDInput = document.getElementById('unvanID');
-              const sureInput = document.getElementById('sure');
-              const maasInput = document.getElementById('maas');
-              const hedefYuzdeInput = document.getElementById('hedefYuzde');
-
-              unvanIDInput.value = selectedCalisan.unvanID || ''; // Eğer değer yoksa boş bırak
-              sureInput.value = selectedCalisan.sure || '';
-              maasInput.value = selectedCalisan.maas || '';
-              hedefYuzdeInput.value = selectedCalisan.hedefYuzde || '';
+            const unvanIDInput = document.getElementById('unvanID');
+            const sureInput = document.getElementById('sure');
+            const maasInput = document.getElementById('maas');
+            const hedefYuzdeInput = document.getElementById('hedefYuzde');
+    
+            unvanIDInput.value = selectedCalisan.unvanID || ''; // Eğer değer yoksa boş bırak
+            sureInput.value = selectedCalisan.sure || '';
+            maasInput.value = selectedCalisan.maas || '';
+            hedefYuzdeInput.value = selectedCalisan.hedefYuzde || '';
           })
           .catch(error => console.error(error));
-  });
-</script>
-    <script>
-      document.getElementById("cikisYap").addEventListener("click", function() {
-          window.location.href = "login.html"; // Sayfa yönlendirme işlemi
       });
-      </script>
-       <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    // Çalışanlar için veri alındığında bu fonksiyon çalışacak
-    function populateCalisanOptions(calisanlar) {
-      const calisanSec = document.getElementById('calisanSec');
-      calisanlar.forEach(calisan => {
-        const option = document.createElement('option');
-        option.value = calisan.id;
-        option.text = calisan.adSoyad;
-        calisanSec.appendChild(option);
-      });
-    }
-  
-    // Çalışan verilerini almak için API'yi çağıran fonksiyon
-    function fetchCalisanlar() {
-      fetch('http://localhost:3000/calisanlar')
-        .then(response => response.json())
-        .then(calisanlar => {
-          populateCalisanOptions(calisanlar);
-        })
-        .catch(error => console.error(error));
-    }
-  
-    // Çalışan verilerini sayfa yüklendiğinde al
-    fetchCalisanlar();
-  
-    // Hesapla butonuna tıklandığında çalışacak fonksiyon
-    document.getElementById('calculateBtn').addEventListener('click', function() {
-    updateAndCalculate();
-});
-
-// Form verilerini güncelleyip puanları hesaplayan fonksiyon
-function updateAndCalculate() {
-    const selectedWorkerID = document.getElementById('calisanSec').value;
-
-    // Seçilen çalışanın verilerini almak için API'yi çağır
-    fetch(`http://localhost:3000/api/calisan/${selectedWorkerID}`)
-        .then(response => response.json())
-        .then(selectedCalisan => {
+    
+      document.getElementById('calculateBtn').addEventListener('click', function () {
+        const selectedWorkerID = document.getElementById('calisanSec').value;
+    
+        // Seçilen çalışanın verilerini almak için API'yi çağır
+        fetch(`http://localhost:3000/api/calisan/${selectedWorkerID}`)
+          .then(response => response.json())
+          .then(selectedCalisan => {
             // Alınan çalışan bilgileri ile verimlilik puanını hesapla
             const unvanID = selectedCalisan.unvanID;
             const sure = selectedCalisan.sure;
             const maas = selectedCalisan.maas;
             const hedefYuzde = selectedCalisan.hedefYuzde;
-
+    
             // Puanlama kurallarına göre puanları hesapla
             const unvanPuan = getUnvanPuan(unvanID);
             const surePuan = getSurePuan(sure);
             const maasPuan = getMaasPuan(maas);
             const hedefYuzdePuan = getHedefYuzdePuan(hedefYuzde);
-
+    
             // Toplam puanı hesapla
             const toplamPuan = unvanPuan + surePuan + maasPuan + hedefYuzdePuan;
-
-            // Toplam puanı gösteren fonksiyonu çağır
-            function result(toplamPuan) {
-    // Your logic for handling toplamPuan
-    console.log("Toplam Puan:", toplamPuan);
-}
-
-
-            // Verimliliği belirle ve grafiği oluştur
-            const verimlilik = getVerimlilik(toplamPuan);
-            createChart(verimlilik);
-        })
-        .catch(error => console.error(error));
-}
-
-    // Unvan ID'ye göre puanı döndüren fonksiyon
-    function getUnvanPuan(unvanID) {
-      // Puanlama kurallarını burada tanımla
-      if (unvanID === 1) {
-        return 1;
-      } else if (unvanID === 2) {
-        return 2;
-      } else if (unvanID === 3) {
-        return 3;
-      } else if (unvanID === 4) {
-        return 4;
-      } else {
-        return 0;
-      }
-    }
-  
-    // Süre değerine göre puanı döndüren fonksiyon
-    function getSurePuan(sure) {
-      // Puanlama kurallarını burada tanımla
-      if (sure < 365) {
-        return 1;
-      } else if (sure <= 730) {
-        return 2;
-      } else {
-        return 3;
-      }
-    }
-  
-    // Maaş değerine göre puanı döndüren fonksiyon
-    function getMaasPuan(maas) {
-      // Puanlama kurallarını burada tanımla
-      if (maas < 15000) {
-        return 1;
-      } else if (maas <= 25000) {
-        return 2;
-      } else {
-        return 3;
-      }
-    }
-  
-    // Hedef Yüzdesi değerine göre puanı döndüren fonksiyon
-    function getHedefYuzdePuan(hedefYuzde) {
-      // Puanlama kurallarını burada tanımla
-      if (hedefYuzde < 60) {
-        return 0;
-      } else if (hedefYuzde <= 70) {
-        return 1;
-      } else if (hedefYuzde <= 85) {
-        return 2;
-      } else {
-        return 3;
-      }
-    }
-  
-    // Toplam puanı baz alarak verimliliği belirleyen fonksiyon
-    function getVerimlilik(toplamPuan) {
-
-      // Verimlilik kriterlerini burada tanımla
-      if (toplamPuan > 7) {
-        return 'Verimli';
-      } else if (toplamPuan >= 5) {
-        return 'Orta Verimli';
-      } else {
-        return 'Verimsiz';
-      }
-    }
-
-    console.log(verimlilik)
-    // Verimlilik durumuna göre grafiği oluşturan fonksiyon
-    function createChart(verimlilik) {
-      const ctx = document.getElementById('myChart').getContext('2d');
-      const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Verimlilik'],
-          datasets: [{
-            label: 'Çalışan Verimliliği',
-            data: [verimlilik === 'Verimli' ? 3 : (verimlilik === 'Orta Verimli' ? 2 : 1)],
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.2)',
-            ],
-            borderColor: [
-              'rgba(75, 192, 192, 1)',
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 3
-            }
-          }
-        }
+    
+            // Toplam puanı göster
+            document.getElementById("toplamPuan").value = toplamPuan;
+          });
       });
-    }
-  });
-       </script>
+    
+      // Unvan ID'ye göre puanı döndüren fonksiyon
+      function getUnvanPuan(unvanID) {
+        // Puanlama kurallarını burada tanımla
+        if (unvanID === 1) {
+          return 1;
+        } else if (unvanID === 2) {
+          return 2;
+        } else if (unvanID === 3) {
+          return 3;
+        } else if (unvanID === 4) {
+          return 4;
+        } else {
+          return 0;
+        }
+      }
+    
+      // Süre değerine göre puanı döndüren fonksiyon
+      function getSurePuan(sure) {
+        // Puanlama kurallarını burada tanımla
+        if (sure < 365) {
+          return 1;
+        } else if (sure <= 730) {
+          return 2;
+        } else {
+          return 3;
+        }
+      }
+    
+      // Maaş değerine göre puanı döndüren fonksiyon
+      function getMaasPuan(maas) {
+        // Puanlama kurallarını burada tanımla
+        if (maas < 15000) {
+          return 1;
+        } else if (maas <= 25000) {
+          return 2;
+        } else {
+          return 3;
+        }
+      }
+      document.getElementById('calculateBtn').addEventListener('click', function () {
+            const selectedWorkerID = document.getElementById('calisanSec').value;
+            const sure = document.getElementById('sure').value;
+            const maas = document.getElementById('maas').value;
+            const hedefYuzde = document.getElementById('hedefYuzde').value;
+
+            // Seçilen çalışanın verilerini almak için API'yi çağır
+            fetch(`http://localhost:3000/api/calisan/${selectedWorkerID}`)
+                .then(response => response.json())
+                .then(selectedCalisan => {
+                    // Alınan çalışan bilgileri ile verimlilik puanını hesapla
+                    const unvanID = selectedCalisan.unvanID;
+
+                    // Kullanıcının girdiği değerleri kullanarak puanlama fonksiyonlarını çağır
+                    const unvanPuan = getUnvanPuan(unvanID);
+                    const surePuan = getSurePuan(sure);
+                    const maasPuan = getMaasPuan(maas);
+                    const hedefYuzdePuan = getHedefYuzdePuan(hedefYuzde);
+
+                    // Toplam puanı hesapla
+                    const toplamPuan = unvanPuan + surePuan + maasPuan + hedefYuzdePuan;
+
+                    // Toplam puanı göster
+                    document.getElementById("toplamPuan").value = toplamPuan;
+                });
+        });
+
+      // Hedef Yüzdesi değerine göre puanı döndüren fonksiyon
+      function getHedefYuzdePuan(hedefYuzde) {
+        // Puanlama kurallarını burada tanımla
+        if (hedefYuzde < 60) {
+          return 0;
+        } else if (hedefYuzde <= 70) {
+          return 1;
+        } else if (hedefYuzde <= 85) {
+          return 2;
+        } else {
+          return 3;
+        }
+      }
+      
+    </script>
+    <script>
+      document.getElementById("cikisYap").addEventListener("click", function () {
+        window.location.href = "login.html"; // Sayfa yönlendirme işlemi
+      });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>

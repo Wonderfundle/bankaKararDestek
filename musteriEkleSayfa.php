@@ -58,7 +58,7 @@ $resultSubeler = mysqli_query($conn, $querySubeler);
     </ul>
   </nav>
   <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
+  <div id="layoutSidenav_nav">
       <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
           <div class="nav">

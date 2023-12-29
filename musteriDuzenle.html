@@ -52,23 +52,29 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
           <div class="sb-sidenav-menu">
             <div class="nav">
-              <a class="nav-link" href="index.php">
+              <a class="nav-link" href="index.html">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-tachometer-alt" style="color:blue"></i>
                 </div>
                 Gösterge Paneli
               </a>
-              <a class="nav-link" href="subeHacmi.html">
+              <a class="nav-link" href="kullanilanUrunSayfa.php">
+                <div class="sb-nav-link-icon">
+                  <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Ürün Kullanımı Ekle
+              </a>
+              <a class="nav-link" href="subeParaYonet.html">
+                <div class="sb-nav-link-icon">
+                  <i class="fas fa-tachometer-alt"></i>
+                </div>
+                Şube Parası Yönet
+              </a>
+              <a class="nav-link" href="calisanPerformansHesapla.php">
                 <div class="sb-nav-link-icon">
                   <i class="fas fa-dolly"></i>
                 </div>
-                Şubenin Bu Ay İşlem Hacmi
-              </a>
-              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
-                aria-expanded="false" aria-controls="collapsePages">
-                <div class="sb-nav-link-icon"><i class="fas fa-warehouse"></i></div>
-                Depo Listele
-                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                Çalışan Performansı Hesapla
               </a>
               <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
             <!--    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
@@ -88,80 +94,71 @@
                 </nav>-->
               </div>
               <div class="sb-sidenav-menu-heading">Müşteri İşlemleri</div>
-              <a class="nav-link" href="musteriDuzenle.html">
+              <a class="nav-link" href="musteriFaizHesapla.html">
                 <div class="sb-nav-link-icon">
                   <i class="fa fa-pen"></i>
                 </div>
-                Müşteri Düzenle
+                Müşteri Faiz Oranı Hesapla
               </a>
-              <a class="nav-link" href="tedarikciDuzenleSayfa.php">
+              <a class="nav-link" href="musteriAltinGeliriHesapla.html">
                 <div class="sb-nav-link-icon">
                   <i class="fa fa-boxes-packing"></i>
                 </div>
-                Tedarikçi Düzenle
-              </a>
-              <a class="nav-link" href="kategoriDuzenleSayfa.php">
-                <div class="sb-nav-link-icon">
-                  <i class="fa fa-layer-group"></i>
-                </div>
-                Kategori Düzenle
-              </a>
-              <a class="nav-link" href="yoneticiDuzenleSayfa.php">
-                <div class="sb-nav-link-icon">
-                  <i class="fa fa-user-tie"></i>
-                </div>
-                Yönetici Düzenle
-              </a>
-              <a class="nav-link" href="depoDuzenleSayfa.php">
-                <div class="sb-nav-link-icon">
-                  <i class="fa fa-warehouse"></i>
-                </div>
-                Depo Düzenle
-              </a>
-              <a class="nav-link" href="stokDuzenleSayfa.php">
-                <div class="sb-nav-link-icon">
-                  <i class="fa fa-box-open"></i>
-                </div>
-                Stok Düzenle
-              </a>
-              <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-              </div>
-              <div class="sb-sidenav-menu-heading">Tablolar</div>
-              <a class="nav-link" href="urunListele.php">
+               Müşteri Altın Geliri Hesapla
+              </a>        
+              <div class="sb-sidenav-menu-heading">Çalışan İşlemleri</div>
+              <a class="nav-link" href="calisanVerimlilikHesapla.html">
                 <div class="sb-nav-link-icon">
                   <i class="fa fa-align-left"></i>
                 </div>
-                Ürün Listele
+                Çalışan Verimlilik Hesapla
               </a>
-              <a class="nav-link" href="tedarikciListele.php">
+              <a class="nav-link" href="calisanPrimHesapla.html">
                 <div class="sb-nav-link-icon">
                   <i class="fa fa-truck-field"></i>
                 </div>
-                Tedarikçi Listele
+                Çalışan Prim Hesapla
               </a>
-              <a class="nav-link" href="depoListele.php">
+             <div class="sb-sidenav-menu-heading">Listeleme İşlemleri</div>
+             <a class="nav-link" href="calisanListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-truck-field"></i>
+              </div>
+              Çalışan Listele
+            </a>
+            <a class="nav-link" href="musteriListele.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-truck-field"></i>
+              </div>
+              Müşteri Listele
+            </a>
+              <a class="nav-link" href="subeListele.php">
                 <div class="sb-nav-link-icon">
-                  <i class="fa fa-warehouse"></i>
+                  <i class="fa fa-truck-field"></i>
                 </div>
-                Depo Listele
+               Şubeleri Listele
               </a>
               <a class="nav-link" href="yoneticiListele.php">
-                <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
-                Yönetici Listele
-              </a>
-              <a class="nav-link" href="kategoriListele.php">
                 <div class="sb-nav-link-icon">
-                  <i class="fa fa-layer-group"></i>
+                  <i class="fa fa-truck-field"></i>
                 </div>
-                Kategori Listele
+                Yöneticileri Listele
               </a>
-              <a class="nav-link" href="stokListele.php">
-                <div class="sb-nav-link-icon">
-                  <i class="fa fa-boxes-stacked"></i>
-                </div>
-                Stok Listele
-              </a>
-            </div>
+            
+            <div class="sb-sidenav-menu-heading">Listeleme İşlemleri</div>
+            <a class="nav-link" href="musteriEkleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-truck-field"></i>
+              </div>
+             Müşteri Ekle
+            </a>
+            <a class="nav-link" href="calisanEkleSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fa fa-truck-field"></i>
+              </div>
+              Çalışan Ekle
+            </a>
+          </div>
           </div>
         </nav>
       </div>

@@ -51,21 +51,33 @@
     </ul>
   </nav>
   <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
+    <<div id="layoutSidenav_nav">
       <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
           <div class="nav">
-            <a class="nav-link" href="index.php">
+            <a class="nav-link" href="index.html">
               <div class="sb-nav-link-icon">
                 <i class="fas fa-tachometer-alt" style="color:blue"></i>
               </div>
               Gösterge Paneli
             </a>
-            <a class="nav-link" href="paraYonet.html">
+            <a class="nav-link" href="kullanilanUrunSayfa.php">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-tachometer-alt"></i>
+              </div>
+              Ürün Kullanımı Ekle
+            </a>
+            <a class="nav-link" href="subeParaYonet.html">
+              <div class="sb-nav-link-icon">
+                <i class="fas fa-tachometer-alt"></i>
+              </div>
+              Şube Parası Yönet
+            </a>
+            <a class="nav-link" href="calisanPerformansHesapla.php">
               <div class="sb-nav-link-icon">
                 <i class="fas fa-dolly"></i>
               </div>
-              Para Yönet
+              Çalışan Performansı Hesapla
             </a>
             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
           <!--    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
@@ -133,9 +145,23 @@
               <div class="sb-nav-link-icon">
                 <i class="fa fa-truck-field"></i>
               </div>
-              Müşterileri Listele
+              Yöneticileri Listele
             </a>
-          </div>
+          
+          <div class="sb-sidenav-menu-heading">Listeleme İşlemleri</div>
+          <a class="nav-link" href="musteriEkleSayfa.php">
+            <div class="sb-nav-link-icon">
+              <i class="fa fa-truck-field"></i>
+            </div>
+           Müşteri Ekle
+          </a>
+          <a class="nav-link" href="calisanEkleSayfa.php">
+            <div class="sb-nav-link-icon">
+              <i class="fa fa-truck-field"></i>
+            </div>
+            Çalışan Ekle
+          </a>
+        </div>
         </div>
       </nav>
     </div>

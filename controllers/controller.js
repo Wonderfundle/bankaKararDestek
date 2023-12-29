@@ -1,16 +1,13 @@
 const dbConn = require('../db/mysql_connect.js');
 const Response = require("../utils/response");
-
 const login = async (req, res) => {
-  const k_adi = req.body.k_adi;
-  const sifre = req.body.sifre;
+  console.log(req.body);
 
-  dbConn.query("SELECT * FROM yoneticiler WHERE k_adi=?", [k_adi], (error, results) => {
+  const kullanici_adi = req.body.kullanici_adi;
+  const sifre = req.body.sifre;
+  dbConn.query("SELECT * FROM yoneticiler WHERE k_adi=?", [kullanici_adi], (error, results) => {
     if (results.length > 0) {
       if (sifre == results[0].sifre) {
-        // Giriş başarılı, session'a kullanıcı adını kaydet
-      
-
         return new Response(results).basarili_giris(res);
       } else {
         return res.status(203).json({
@@ -25,7 +22,11 @@ const login = async (req, res) => {
       });
     }
   });
+
+  // İkinci console.log bu bloğun içinde olmalı
+  console.log(req.body);
 };
+
 
 const getSubeler = (req, res) => {
   const query = 'SELECT * FROM subeler';

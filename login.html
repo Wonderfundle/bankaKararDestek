@@ -27,7 +27,7 @@
                                     <div class="mt-4"></div>
                                     <form id="loginForm">
                                         <div class="form-floating mb-3">                                    
-                                            <input class="form-control" id="k_adi" name="k_adi" placeholder="Kullanıcı Adı"  />
+                                            <input class="form-control" id="kullanici_adi" name="k_adi" placeholder="Kullanıcı Adı"  />
                                             <label for="k_adi">Kullanıcı Adı</label>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -52,41 +52,76 @@
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
-    $(document).ready(function(){
-    $("#giris_yap").click(function(){
-        // obje json formatında
-        const girisKontrol = {
-            k_adi: ($("#k_adi").val()),
-            
-            sifre: ($("#sifre").val()),
-        };
+        $(document).ready(function() {
+          $("#giris_yap").click(function() {
+            const kullanici_adi = $("#kullanici_adi").val();
+            const sifre = $("#sifre").val();
+      
+            const loginData = {
+              kullanici_adi: kullanici_adi,
+              sifre: sifre
+            };
 
-        $.ajax({
-            // API Endpoint
-            url: "http://localhost:3000/api/login",
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(girisKontrol),
-            success: function(response) {
+            console.log("Gönderilen Veri:", loginData);
+      
+            $.ajax({
+              url: "http://localhost:3000/api/login",
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(loginData),
+              success: function(response) {
                 console.log(response);
                 if (response.success) {
-                    // Sadece başarılıysa yönlendirme yap
-                    alert("Giriş Yapıldı");
-                    window.location.href = "index.html";
+                  alert("Giriş Yapıldı");
+                  window.location.href = "index.html";
                 } else {
-                    // Başarısızsa uyarı ver
-                    alert("Hata");
+                  alert("Hata: " + response.message);
                 }
-            },
-            error: function(xhr, status, error) {
+              },
+              error: function(xhr, status, error) {
                 console.error("AJAX Hatası:", status, error);
                 alert("AJAX Hatası: " + error);
-            }
+              }
+            });
+          });
+        });
+      </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+ <!--  <script>
+        $(document).ready(function(){
+        $("#giris_yap").click(function(){
+            // obje json formatında
+            const girisKontrol = {
+                k_adi: ($("#k_adi").val()),
+                
+                sifre: ($("#sifre").val()),
+            };
+            console.log(girisKontrol);
+            $.ajax({
+                // API Endpoint
+                url: "http://localhost:3000/api/login",
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(girisKontrol),
+                success: function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        // Sadece başarılıysa yönlendirme yap
+                        alert("Giriş Yapıldı");
+                        window.location.href = "index.html";
+                    } else {
+                        // Başarısızsa uyarı ver
+                        alert("Hata");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Hatası:", status, error);
+                    alert("AJAX Hatası: " + error);
+                }
+            });
         });
     });
-});
-    </script>
+        </script> -->
 </body>
 </html>

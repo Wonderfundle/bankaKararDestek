@@ -3,7 +3,12 @@ const dbConn = require('./db/mysql_connect.js')
 const cors = require('cors');
 const router = require('./routers/routes.js');
 const { getSubeler } = require('./controllers/controller.js');
+const { login } = require('./controllers/controller.js');
 const app = express()
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(cors());
+app.use('/api', router);
 
 //const Response = require("utils/response.js");
 
@@ -12,10 +17,8 @@ app.get('/', function (req, res) {
   res.send('Hello World')
 })
 
-app.get('/login', function (req, res) {
-  console.log('Gelen Veri:', req.body)
-  res.send('app sayfası')
-})
+
+app.get('/login', login);
 app.get('/subeler', getSubeler);
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -56,7 +59,7 @@ app.use((req, res, next) => {
         });
     }
 });
-app.use('/api', router);
+
 app.get('/calisanlar', async (req, res) => {
   try {
     const result = await dbConn.promise().query("SELECT id, adSoyad, unvanID, sure, maas, calistigiSubeID, hedefYuzde FROM calisanlar");
@@ -82,11 +85,9 @@ app.get('/calisanlar', async (req, res) => {
 });
 
 
-app.use(cors());
 app.use(express.json())
 app.use(express.json({limit:'50mb'}))
 app.use(express.json({limit:'50mb',extended:true,parameterLimit:50000}))
-app.use('/api',router)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Sunucu ${PORT} portunda çalışıyor.`);

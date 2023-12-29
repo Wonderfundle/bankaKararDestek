@@ -19,7 +19,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css"  />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
   </head>
+  <script>
+    window.onload = function () {
+        // toggleInput fonksiyonunu çağır
+        document.getElementById('faizOrani').addEventListener('change', function () {
+            toggleInput(this, 'customFaizOrani');
+        });
+
+        // toggleInput fonksiyonunu çağır
+        document.getElementById('faizSuresi').addEventListener('change', function () {
+            toggleInput(this, 'customFaizSuresi');
+        });
+    }
+
+    function toggleInput(selectElement, customInputId) {
+        var customInput = document.getElementById(customInputId);
+        if (selectElement.value === 'custom') {
+            customInput.style.display = 'block';
+        } else {
+            customInput.style.display = 'none';
+        }
+    }
+</script>
+
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-warning bg-success">
       <!-- Navbar Brand-->
@@ -209,7 +233,9 @@
                                     <option value="30">30</option>
                                     <option value="35">35</option>
                                     <option value="40">40</option>
-                                </select>
+                                    <option value="custom">Kendim Gireceğim</option>
+                                  </select>
+                                  <input type="text" class="form-control" id="customFaizOrani" style="display:none;" placeholder="Kendi Oranınızı Girin">
                             </div>
                           </div>
                         </div>
@@ -222,6 +248,9 @@
                                         <option value="6">6 Ay</option>
                                         <option value="12">1 Yıl</option>
                                         <option value="24">2 Yıl</option>
+                                        <option value="custom">Kendim Gireceğim</option>
+                                  </select>
+                                  <input type="text" class="form-control" id="customFaizSuresi" style="display:none;" placeholder="Kendi Faiz Sürenizi Ay Bazında Girin">
                                     </select>
                                 </div>
                             </div>
@@ -234,6 +263,7 @@
                 </main>
     </div>
     </div>
+ 
     <script>
         fetch('http://localhost:3000/api/musteriler') // API endpoint'iniz
     .then(response => response.json())
@@ -250,57 +280,73 @@
     </script>
 <script>
     let myChart; 
-
     document.getElementById('calculateBtn').addEventListener('click', function () {
-        if (myChart) {
-            myChart.destroy();
-        }
+    if (myChart) {
+        myChart.destroy();
+    }
 
-        const faizOraniYillik = parseFloat(document.getElementById('faizOrani').value);
-        const faizSuresiYil = parseFloat(document.getElementById('faizSuresi').value);
-        const para = parseFloat(document.getElementById('para').value);
+    let faizOraniYillik;
+    let faizSuresiYil;
 
-        const faizOraniAylık = faizOraniYillik / 12;
-        const faizSuresiAylar = faizSuresiYil;
+    // Faiz Oranını kontrol et
+    if (document.getElementById('faizOrani').value === 'custom') {
+        // Eğer faizOrani 'custom' ise, customFaizOrani alanındaki değeri al
+        faizOraniYillik = parseFloat(document.getElementById('customFaizOrani').value);
+    } else {
+        // Diğer durumda, faizOrani alanındaki değeri al
+        faizOraniYillik = parseFloat(document.getElementById('faizOrani').value);
+    }
 
-        const toplamFaizTutari = [];
-        const labels = [];
-        let toplamPara = para;
+    if (document.getElementById('faizSuresi').value === 'custom') {
+        // Eğer faizOrani 'custom' ise, customFaizOrani alanındaki değeri al
+        faizSuresiYil = parseFloat(document.getElementById('customFaizSuresi').value);
+    } else {
+        // Diğer durumda, faizOrani alanındaki değeri al
+        faizSuresiYil = parseFloat(document.getElementById('faizSuresi').value);
+    }
+   
+    const para = parseFloat(document.getElementById('para').value);
+    const faizOraniAylık = faizOraniYillik / 12;
+    const faizSuresiAylar = faizSuresiYil;
 
-        for (let i = 1; i <= faizSuresiAylar; i++) {
-            labels.push(`Ay ${i}`);
-            const aylıkFaizTutarı = toplamPara * (faizOraniAylık / 100); // Hata burada düzeltildi
-            toplamPara += aylıkFaizTutarı;
-            toplamFaizTutari.push(parseFloat(toplamPara.toFixed(1)));
-        }
+    const toplamFaizTutari = [];
+    const labels = [];
+    let toplamPara = para;
 
-        // Sadece girilen faiz süresi kadar olan verileri al
-        const trimmedLabels = labels.slice(0, faizSuresiAylar);
-        const trimmedToplamFaizTutari = toplamFaizTutari.slice(0, faizSuresiAylar);
+    for (let i = 1; i <= faizSuresiAylar; i++) {
+        labels.push(`Ay ${i}`);
+        const aylıkFaizTutarı = toplamPara * (faizOraniAylık / 100);
+        toplamPara += aylıkFaizTutarı;
+        toplamFaizTutari.push(parseFloat(toplamPara.toFixed(1)));
+    }
 
-        const ctx = document.getElementById('myChart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: trimmedLabels,
-                datasets: [{
-                    label: 'Faiz Geliri',
-                    data: trimmedToplamFaizTutari,
-                    backgroundColor: ['rgba(75, 192, 192, 0.2)'],
-                    borderColor: ['rgba(75, 192, 192, 1)'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom'
-                    }
+    // Sadece girilen faiz süresi kadar olan verileri al
+    const trimmedLabels = labels.slice(0, faizSuresiAylar);
+    const trimmedToplamFaizTutari = toplamFaizTutari.slice(0, faizSuresiAylar);
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: trimmedLabels,
+            datasets: [{
+                label: 'Faiz Geliri',
+                data: trimmedToplamFaizTutari,
+                backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+                borderColor: ['rgba(75, 192, 192, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom'
                 }
             }
-        });
+        }
     });
+});
 </script>
 
 

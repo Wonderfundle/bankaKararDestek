@@ -1,9 +1,10 @@
 const express = require('express')
 const dbConn = require('./db/mysql_connect.js')
-const session = require('express-session');
 const cors = require('cors');
-const router=require("./routers")
+const router = require('./routers/routes.js');
+const { getSubeler } = require('./controllers/controller.js');
 const app = express()
+
 //const Response = require("utils/response.js");
 
 //Require = Import in Python
@@ -15,6 +16,7 @@ app.get('/login', function (req, res) {
   console.log('Gelen Veri:', req.body)
   res.send('app sayfası')
 })
+app.get('/subeler', getSubeler);
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

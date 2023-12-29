@@ -28,7 +28,7 @@
                                     <form id="loginForm">
                                         <div class="form-floating mb-3">                                    
                                             <input class="form-control" id="k_adi" name="k_adi" placeholder="Kullanıcı Adı"  />
-                                            <label for="sifre">Kullanıcı Adı</label>
+                                            <label for="k_adi">Kullanıcı Adı</label>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input  class="form-control"  id="sifre"  name="sifre"  type="password"  placeholder="Password" />
@@ -54,38 +54,39 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
-        $(document).ready(function(){
+    $(document).ready(function(){
     $("#giris_yap").click(function(){
-      // obje json formatında
-      const girisKontrol = {
-        k_adi: $("#k_adi").val(),
-        sifre: $("#sifre").val(),
-      };
+        // obje json formatında
+        const girisKontrol = {
+            k_adi: ($("#k_adi").val()),
+            
+            sifre: ($("#sifre").val()),
+        };
 
-      $.ajax({
-        // API Endpoint
-        url: "http://localhost:3000/api/login",
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(girisKontrol),
-        success: function(response) {
-          console.log(response);
-          if (response.success) {
-            // Sadece başarılıysa yönlendirme yap
-            alert("Giriş Yapıldı");
-            window.location.href = "index.html";
-          } else {
-            // Başarısızsa uyarı ver
-            alert("Hata");
-          }
-        },
-        error: function(error) {
-          console.error(error);
-          alert("Hata");
-        }
-      });
+        $.ajax({
+            // API Endpoint
+            url: "http://localhost:3000/api/login",
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(girisKontrol),
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    // Sadece başarılıysa yönlendirme yap
+                    alert("Giriş Yapıldı");
+                    window.location.href = "index.html";
+                } else {
+                    // Başarısızsa uyarı ver
+                    alert("Hata");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Hatası:", status, error);
+                alert("AJAX Hatası: " + error);
+            }
+        });
     });
-  });
+});
     </script>
 </body>
 </html>

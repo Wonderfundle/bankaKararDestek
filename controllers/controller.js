@@ -27,6 +27,20 @@ const login = async (req, res) => {
   });
 };
 
+const getSubeler = (req, res) => {
+  const query = 'SELECT * FROM subeler';
+
+  dbConn.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing MySQL query:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    res.json(results);
+  });
+};
+
 const getAltinFiyatlari = async (req, res) => {
   try {
     // Tüm altın fiyatlarını çekme işlemini yapın
@@ -125,6 +139,31 @@ const getCalisanlar = async (req, res) => {
     });
   }
 };
+const getSubeHacmi = async (req, res) => {
+  try {
+    const subeID = req.params.subeID.split('=')[1];  
+    // Ardından sorgunuzu düzenleyin
+    const query = 'SELECT subeID, hacim FROM subehacmi WHERE subeID = ?';
+    const result = await dbConn.promise().query(query, [subeID]);
+
+if (result.length > 0) {
+  const subeHacmiData = result[0];
+  return res.json(subeHacmiData);
+} else {
+  return res.status(203).json({
+    success: false,
+    message: 'Şube hacmi verisi bulunamadı',
+  });
+}
+    
+  } catch (error) {
+    console.error('Şube hacmi verisini çekerken bir hata oluştu:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Şube hacmi verisi çekilemedi',
+    });
+  }
+};
 const getcalisanById = async (req, res) => {
   try {
     const calisanId = req.params.id; // Correct variable name
@@ -148,4 +187,4 @@ const getcalisanById = async (req, res) => {
     });
   }
 };
-module.exports = { login, getMusteriler, getMusteriById,getAltinFiyatlari, getCalisanlar, getcalisanById};
+module.exports = { login, getMusteriler, getMusteriById,getAltinFiyatlari, getCalisanlar, getcalisanById,getSubeHacmi,getSubeler};

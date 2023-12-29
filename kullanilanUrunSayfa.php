@@ -284,56 +284,7 @@ $conn->close();
         }
     }
 </script>
-              <script>
-                function kullanilanUrunDuzenle() {
-                  var depo_id = document.getElementById('depo_id').value;
-                  var depo_adi = document.getElementById('depo_adi').value;
-                  if (depo_id === "" || depo_adi === "") {
-                    alert("Lütfen tüm alanları doldurun.");
-                  } else {
-                    var url = 'depoDuzenle.php';
-                    var params = 'depo_id=' + depo_id + '&depo_adi=' + depo_adi;
-                    console.log(depo_id);
-
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', url, true);
-                    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                    xhr.onreadystatechange = function () {
-                      if (xhr.readyState == 4 && xhr.status == 200) {
-                        console.log(xhr.responseText);
-
-                      }
-                    }
-
-                    xhr.send(params);
-                  }
-                }
-              </script>
-              <script>
-                function kullanilanUrunSil() {
-                  var depo_id = document.getElementById('depo_id').value;
-                  if (depo_id === "") {
-                    alert("Lütfen ID girin.");
-                  } else {
-                    var confirmDelete = confirm("Depoyu silmek istediğinize emin misiniz?")
-
-                    if (confirmDelete) {
-                      var url = 'depoSil.php';
-                      var params = 'depo_id=' + depo_id
-                      var xhr = new XMLHttpRequest();
-                      xhr.open('POST', url, true);
-                      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                      xhr.onreadystatechange = function () {
-                        if (xhr.readyState == 4 && xhr.status == 200) {
-                          console.log(xhr.responseText);
-                        }
-                      }
-
-                      xhr.send(params);
-                    }
-                  }
-                }
-              </script>
+    
   <script>
     document.getElementById("cikisYap").addEventListener("click", function() {
         window.location.href = "login.html"; // Sayfa yönlendirme işlemi

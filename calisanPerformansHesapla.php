@@ -309,34 +309,6 @@ $resultCalisanlar = mysqli_query($conn, $queryCalisanlar);
         </div>
     </main>
     
-    <script>
-    // adSoyad seçildiğinde bu fonksiyon çalışacak
-    function adSoyadDegisti() {
-        // Seçilen çalışanın ID'sini al
-        var calisanID = document.getElementById("adSoyad").value;
-
-        // AJAX ile veri gönderme
-        $.ajax({
-            type: "POST",
-            url: "getCalisanBilgileri.php",  // Bu dosya çalışan bilgilerini getirecek
-            data: { calisanID: calisanID },
-            success: function(response) {
-                // Gelen veriyi işleme
-                var bilgiler = JSON.parse(response);
-                // Form elemanlarına bilgileri yerleştirme
-                document.getElementById("unvanID").value = bilgiler.unvanID;
-                document.getElementById("sure").value = bilgiler.sure;
-                document.getElementById("maas").value = bilgiler.maas;
-                document.getElementById("hedefYuzde").value = bilgiler.hedefYuzde;
-            }
-        });
-    }
-
-    // adSoyad değiştiğinde adSoyadDegisti fonksiyonunu çağır
-    document.getElementById("adSoyad").addEventListener("change", adSoyadDegisti);
-
-    
-</script>
 <script>
         // adSoyad seçildiğinde bu fonksiyon çalışacak
         function adSoyadDegisti() {
@@ -447,41 +419,28 @@ document.addEventListener("DOMContentLoaded", function () {
       bar.setText(Math.round(bar.value() * 100));
     }
   });
-
-  // Kullanıcının girdiği değerleri al
+  var sure = document.getElementById("sure").value;
   var unvanID = document.getElementById("unvanID").value;
   var maas = parseFloat(document.getElementById("maas").value);
   var hedefYuzde = parseFloat(document.getElementById("hedefYuzde").value);
 
-  // AJAX ile veri gönderme
-  var calisanID = document.getElementById("adSoyad").value;
-  $.ajax({
-    type: "POST",
-    url: "getCalisanBilgileri.php",
-    data: { calisanID: calisanID },
-    success: function (response) {
-      // Gelen veriyi işleme
-      var bilgiler = JSON.parse(response);
+  // Hesaplamaları yap
+  var toplamPuan = hesaplamalariYap({ sure: sure, unvanID: unvanID, maas: maas, hedefYuzde: hedefYuzde });
 
-      // Hesaplamaları yap
-      var toplamPuan = hesaplamalariYap(bilgiler);
+  // Toplam puanı bir değişkene ata
+  document.getElementById("toplamPuan").value = toplamPuan;
 
-      // Toplam puanı bir değişkene ata
-      document.getElementById("toplamPuan").value = toplamPuan;
+  // Yuvarlak ilerleme çubuğunu güncelle
+  bar.animate(toplamPuan / 15); // Yüzde cinsinden değer bekler
 
-      // Yuvarlak ilerleme çubuğunu güncelle
-      bar.animate(toplamPuan / 15);; // Yüzde cinsinden değer bekler
-
-      // Renk sınıflarını uygula
-      if (toplamPuan <= 5) {
-        bar.path.setAttribute('class', 'progress-bar progress-bar-red');
-      } else if (toplamPuan <= 11) {
-        bar.path.setAttribute('class', 'progress-bar progress-bar-yellow');
-      } else {
-        bar.path.setAttribute('class', 'progress-bar progress-bar-green');
-      }
-    }
-  });
+  // Renk sınıflarını uygula
+  if (toplamPuan <= 5) {
+    bar.path.setAttribute('class', 'progress-bar progress-bar-red');
+  } else if (toplamPuan <= 11) {
+    bar.path.setAttribute('class', 'progress-bar progress-bar-yellow');
+  } else {
+    bar.path.setAttribute('class', 'progress-bar progress-bar-green');
+  }
 }
 
 // Hesaplamaları yapacak fonksiyon

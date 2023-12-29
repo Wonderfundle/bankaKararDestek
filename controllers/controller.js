@@ -1,7 +1,6 @@
 const dbConn = require('../db/mysql_connect.js');
 const Response = require("../utils/response");
 const login = async (req, res) => {
-  console.log(req.body);
 
   const kullanici_adi = req.body.kullanici_adi;
   const sifre = req.body.sifre;

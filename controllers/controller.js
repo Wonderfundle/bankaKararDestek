@@ -22,7 +22,7 @@ const login = async (req, res) => {
     }
   });
 
-  // İkinci console.log bu bloğun içinde olmalı
+  
   console.log(req.body);
 };
 
@@ -43,7 +43,7 @@ const getSubeler = (req, res) => {
 
 const getAltinFiyatlari = async (req, res) => {
   try {
-    // Tüm altın fiyatlarını çekme işlemini yapın
+    
     const [rows] = await dbConn.promise().query('SELECT altinfiyati FROM altinfiyatlari');
 
     if (rows && rows.length > 0) {
